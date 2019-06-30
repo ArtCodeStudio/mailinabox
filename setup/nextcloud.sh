@@ -13,7 +13,8 @@ apt-get purge -qq -y owncloud* # we used to use the package manager
 
 apt_install php php-fpm \
 	php-cli php-sqlite3 php-gd php-imap php-curl php-pear curl \
-	php-dev php-gd php-xml php-mbstring php-zip php-apcu php-json php-intl
+	php-dev php-gd php-xml php-mbstring php-zip php-apcu php-json \
+	php-intl php-imagick
 
 InstallNextcloud() {
 
@@ -49,7 +50,11 @@ InstallNextcloud() {
 
 	# Starting with Nextcloud 15, the app user_external is no longer included in Nextcloud core,
 	# we will install from their github repository.
+<<<<<<< HEAD
 	wget_verify https://github.com/nextcloud/user_external/releases/download/v0.6.1/user_external-0.6.1.tar.gz 1e9c40eb9b1e2504c03edcab88f11d7d1f008df1 /tmp/user_external.tgz
+=======
+	wget_verify https://github.com/nextcloud/user_external/releases/download/v0.6.3/user_external-0.6.3.tar.gz 0f756d35fef6b64a177d6a16020486b76ea5799c /tmp/user_external.tgz
+>>>>>>> c0f4d5479fe1f4fd9a64240d0ded8f5320ae3b69
 	tar -xf /tmp/user_external.tgz -C /usr/local/lib/owncloud/apps/
 	rm /tmp/user_external.tgz
 
@@ -81,6 +86,9 @@ InstallNextcloud() {
 
 		# Add missing indices. NextCloud didn't include this in the normal upgrade because it might take some time.
 		sudo -u www-data php /usr/local/lib/owncloud/occ db:add-missing-indices
+
+		# Run conversion to BigInt identifiers, this process may take some time on large tables.
+		sudo -u www-data php /usr/local/lib/owncloud/occ db:convert-filecache-bigint --no-interaction
 	fi
 }
 
@@ -155,7 +163,11 @@ if [ ! -f $STORAGE_ROOT/owncloud/owncloud.db ]; then
     array(
       'class' => 'OC_User_IMAP',
         'arguments' => array(
+<<<<<<< HEAD
           '127.0.0.1', 143, '', ''
+=======
+          '127.0.0.1', 143, null
+>>>>>>> c0f4d5479fe1f4fd9a64240d0ded8f5320ae3b69
          ),
     ),
   ),
@@ -229,7 +241,11 @@ include("$STORAGE_ROOT/owncloud/config.php");
 
 \$CONFIG['mail_domain'] = '$PRIMARY_HOSTNAME';
 
+<<<<<<< HEAD
 \$CONFIG['user_backends'] = array(array('class' => 'OC_User_IMAP','arguments' => array('127.0.0.1', 143, '', ''),),);
+=======
+\$CONFIG['user_backends'] = array(array('class' => 'OC_User_IMAP','arguments' => array('127.0.0.1', 143, null),),);
+>>>>>>> c0f4d5479fe1f4fd9a64240d0ded8f5320ae3b69
 
 echo "<?php\n\\\$CONFIG = ";
 var_export(\$CONFIG);
